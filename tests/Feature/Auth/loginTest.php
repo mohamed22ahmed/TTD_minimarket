@@ -16,3 +16,16 @@ test('user can login using email', function () {
     $response->assertJson(['message' => 'OTP sent successfully']);
     $response->assertJson(['otp' => $response->json()['otp']]);
 });
+
+test('user can login using phone', function () {
+    $user = User::factory()->create();
+
+    $response = $this->post('/api/login', [
+        'username' => $user->phone
+    ]);
+
+    $response->assertStatus(200);
+    $response->assertJsonStructure(['message', 'otp']);
+    $response->assertJson(['message' => 'OTP sent successfully']);
+    $response->assertJson(['otp' => $response->json()['otp']]);
+});

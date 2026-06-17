@@ -10,11 +10,18 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
-            'username' => 'required|email',
-        ]);
+        if(filter_var($request->username, FILTER_VALIDATE_EMAIL)){
+            $request->validate([
+                'username' => 'required|email',
+            ]);
+            $user = User::where('email', $request->username)->first();
+        }else{
+            $request->validate([
+                'username' => 'required',
+            ]);
+            $user = User::where('phone', $request->username)->first();
+        }
 
-        $user = User::where('email', $request->username)->first();
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
