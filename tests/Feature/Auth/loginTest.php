@@ -17,6 +17,16 @@ test('user can login using email', function () {
     $response->assertJson(['otp' => $response->json()['otp']]);
 });
 
+test('user cant login using wrong email', function () {
+    $response = $this->post('/api/login', [
+        'username' => 'test@gmail.com'
+    ]);
+
+    $response->assertStatus(500);
+    $response->assertJsonStructure(['message']);
+    $response->assertJson(['message' => 'User not found']);
+});
+
 test('user can login using phone', function () {
     $user = User::factory()->create();
 
@@ -28,4 +38,14 @@ test('user can login using phone', function () {
     $response->assertJsonStructure(['message', 'otp']);
     $response->assertJson(['message' => 'OTP sent successfully']);
     $response->assertJson(['otp' => $response->json()['otp']]);
+});
+
+test('user cant login using wrong phone', function () {
+    $response = $this->post('/api/login', [
+        'username' => '+201236548987'
+    ]);
+
+    $response->assertStatus(500);
+    $response->assertJsonStructure(['message']);
+    $response->assertJson(['message' => 'User not found']);
 });

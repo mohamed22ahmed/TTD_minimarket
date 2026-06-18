@@ -23,7 +23,7 @@ class LoginController extends Controller
         }
 
         if (!$user) {
-            return response()->json(['message' => 'User not found'], 404);
+            return response()->json(['message' => 'User not found'], 500);
         }
 
         $otp = mt_rand(10000, 99999);
