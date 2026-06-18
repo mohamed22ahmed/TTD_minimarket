@@ -42,7 +42,7 @@ test('user can login using phone', function () {
 
 test('user cant login using wrong phone', function () {
     $response = $this->post('/api/login', [
-        'username' => '+201236548987'
+        'username' => '+201236548954'
     ]);
 
     $response->assertStatus(500);

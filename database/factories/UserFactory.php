@@ -28,7 +28,9 @@ class UserFactory extends Factory
             'id' => Str::uuid(),
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'phone' => fake()->unique()->phoneNumber(),
+            'phone' => fake()->randomElement(['0', '+20'])
+                        . fake()->randomElement(['10', '11', '12', '15'])
+                        . fake()->numerify('########'),
             'remember_token' => Str::random(10)
         ];
     }
