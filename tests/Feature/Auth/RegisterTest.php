@@ -2,7 +2,7 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
 
-uses(RefreshDatabase::class);
+//uses(RefreshDatabase::class);
 
 test('user can register', function () {
     $response = $this->post('/api/register', [
@@ -12,7 +12,7 @@ test('user can register', function () {
         'user_type'      => 'owner',
         'market_name'    => 'My Market',
         'market_name_ar' => 'متجرى',
-        'cr_number'      => '101012345',
+        'cr_number'      => '101012345'
     ]);
 
     $response->assertStatus(201);
