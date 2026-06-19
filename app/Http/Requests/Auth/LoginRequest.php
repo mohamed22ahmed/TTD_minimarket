@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use App\Rules\EmailOrPhone;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,5 +28,20 @@ class LoginRequest extends FormRequest
         return [
             'username' => ['required', new EmailOrPhone()],
         ];
+    }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $username = $this->input('username');
+            $user = User::where('email', $username)->orWhere('phone', $username)->first();
+
+            if (!$user) {
+                $validator->errors()->add(
+                    'credentials',
+                    'User not found with provided email or phone. Please check your credentials.'
+                );
+            }
+        });
     }
 }

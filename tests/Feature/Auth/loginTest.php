@@ -12,9 +12,8 @@ test('user can login using email', function () {
     ]);
 
     $response->assertStatus(200);
-    $response->assertJsonStructure(['message', 'otp']);
-    $response->assertJson(['message' => 'OTP sent successfully']);
-    $response->assertJson(['otp' => $response->json()['otp']]);
+    $response->assertJsonStructure(['message']);
+    $response->assertJson(['message' => 'OTP sent successfully, please check your email']);
 });
 
 test('user cant login using wrong email', function () {
@@ -22,9 +21,9 @@ test('user cant login using wrong email', function () {
         'username' => 'test@gmail.com'
     ]);
 
-    $response->assertStatus(500);
+    $response->assertStatus(422);
     $response->assertJsonStructure(['message']);
-    $response->assertJson(['message' => 'User not found']);
+    $response->assertJson(['message' => 'User not found with provided email or phone. Please check your credentials.']);
 });
 
 test('user can login using phone', function () {
@@ -35,9 +34,8 @@ test('user can login using phone', function () {
     ]);
 
     $response->assertStatus(200);
-    $response->assertJsonStructure(['message', 'otp']);
-    $response->assertJson(['message' => 'OTP sent successfully']);
-    $response->assertJson(['otp' => $response->json()['otp']]);
+    $response->assertJsonStructure(['message']);
+    $response->assertJson(['message' => 'OTP sent successfully, please check your email']);
 });
 
 test('user cant login using wrong phone', function () {
@@ -45,7 +43,7 @@ test('user cant login using wrong phone', function () {
         'username' => '+201236548954'
     ]);
 
-    $response->assertStatus(500);
+    $response->assertStatus(422);
     $response->assertJsonStructure(['message']);
-    $response->assertJson(['message' => 'User not found']);
+    $response->assertJson(['message' => 'User not found with provided email or phone. Please check your credentials.']);
 });

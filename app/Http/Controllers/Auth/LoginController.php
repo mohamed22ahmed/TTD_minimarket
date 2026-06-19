@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\UserLoggedIn;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\User;
@@ -11,26 +12,8 @@ class LoginController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        if(filter_var($request->username, FILTER_VALIDATE_EMAIL)){
-            $request->validate([
-                'username' => 'required|email',
-            ]);
-            $user = User::where('email', $request->username)->first();
-        }else{
-            $request->validate([
-                'username' => 'required',
-            ]);
-            $user = User::where('phone', $request->username)->first();
-        }
-
-        if (!$user) {
-            return response()->json(['message' => 'User not found'], 500);
-        }
-
-        $otp = mt_rand(10000, 99999);
-        $user->otp = $otp;
-        $user->save();
-
-        return response()->json(['message' => 'OTP sent successfully', 'otp' => $otp]);
+        $user = User::where('email', $request->username)->orWhere('phone', $request->username)->first();
+        event(new UserLoggedIn($user));
+        return response()->json(['message' => 'OTP sent successfully, please check your email']);
     }
 }
